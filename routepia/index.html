@@ -6,22 +6,24 @@
     <title>Routepia — Paint the world you've explored</title>
     <meta
       name="description"
-      content="Routepia is a privacy-first travel-history mapper for Android. 100% on-device, no account, no telemetry. Paint every place you've ever been."
+      content="Routepia is a privacy-first travel-history mapper for Android. 100% on-device. Paint every place you've ever been."
     />
     <meta property="og:title" content="Routepia — Paint the world you've explored" />
     <meta
       property="og:description"
-      content="A privacy-first travel-history mapper. Runs entirely on your phone."
+      content="A privacy-first travel-history mapper for Android. Runs entirely on your phone."
     />
-    <meta property="og:image" content="src/icon-1024.png" />
+    <meta property="og:image" content="src/app-icon.png" />
     <link rel="icon" href="src/app-icon.png" type="image/png" />
     <style>
       :root {
         --bg: #0e1116;
         --bg-elev: #161b22;
+        --bg-elev-2: #1c232c;
         --fg: #e6edf3;
         --muted: #8b949e;
         --accent: #2f81f7;
+        --accent-2: #58a6ff;
         --accent-soft: #1f6feb33;
         --border: #30363d;
         --success: #3fb950;
@@ -33,33 +35,43 @@
           "Hiragino Sans", "Noto Sans JP", sans-serif;
         background: var(--bg);
         color: var(--fg);
-        line-height: 1.6;
+        line-height: 1.65;
         -webkit-font-smoothing: antialiased;
       }
-      a { color: var(--accent); text-decoration: none; }
+      a { color: var(--accent-2); text-decoration: none; }
       a:hover { text-decoration: underline; }
-      .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+      .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
       header {
-        padding: 64px 0 48px;
+        padding: 72px 0 56px;
         text-align: center;
         background:
-          radial-gradient(circle at 50% 0%, var(--accent-soft) 0%, transparent 60%),
+          radial-gradient(circle at 50% 0%, var(--accent-soft) 0%, transparent 65%),
           var(--bg);
         border-bottom: 1px solid var(--border);
         position: relative;
       }
+      .lang-switch { position: absolute; top: 16px; right: 24px; }
+      .lang-switch a { font-size: 0.85rem; margin-left: 12px; color: var(--muted); }
+
       .logo {
         width: 128px;
         height: 128px;
         border-radius: 28px;
         margin-bottom: 24px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--border);
       }
-      h1 { font-size: 2.5rem; margin: 0 0 12px; letter-spacing: -0.02em; }
-      .tagline { color: var(--muted); font-size: 1.15rem; margin: 0 0 32px; }
-      .badges {
-        display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+      h1 {
+        font-size: 2.6rem;
+        margin: 0 0 12px;
+        letter-spacing: -0.02em;
+        background: linear-gradient(135deg, #fff 0%, var(--accent-2) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
+      .tagline { color: var(--muted); font-size: 1.2rem; margin: 0 0 32px; }
+      .badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 28px; }
       .badge {
         display: inline-block;
         padding: 6px 14px;
@@ -69,52 +81,122 @@
         color: var(--muted);
         background: var(--bg-elev);
       }
-      .badge.live { color: var(--success); border-color: var(--success); }
-      section { padding: 56px 0; border-bottom: 1px solid var(--border); }
-      section h2 { font-size: 1.6rem; margin: 0 0 20px; letter-spacing: -0.01em; }
+
+      .hero-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 32px;
+        background: var(--accent);
+        color: white !important;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 1.05rem;
+        box-shadow: 0 4px 20px var(--accent-soft);
+        transition: transform 0.15s, box-shadow 0.15s;
+      }
+      .hero-cta:hover {
+        text-decoration: none;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 28px var(--accent-soft);
+      }
+      .hero-cta::before { content: "▶"; font-size: 0.9em; }
+
+      section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+      section h2 {
+        font-size: 1.7rem;
+        margin: 0 0 24px;
+        letter-spacing: -0.01em;
+        text-align: center;
+      }
+      section .lead {
+        text-align: center;
+        color: var(--muted);
+        max-width: 640px;
+        margin: 0 auto 36px;
+        font-size: 1.05rem;
+      }
+
+      /* Showcase: alternating image + text */
+      .showcase {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: center;
+        margin-bottom: 56px;
+      }
+      .showcase:last-child { margin-bottom: 0; }
+      .showcase.reverse > .shot { order: 2; }
+      .showcase .shot {
+        background: var(--bg-elev);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 12px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      }
+      .showcase .shot img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 10px;
+      }
+      .showcase h3 { margin: 0 0 12px; font-size: 1.35rem; letter-spacing: -0.01em; }
+      .showcase p { margin: 0; color: var(--muted); }
+
+      /* Features grid (smaller cards under showcase) */
       .features {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
         gap: 16px;
       }
       .feature {
         background: var(--bg-elev);
         border: 1px solid var(--border);
         border-radius: 12px;
-        padding: 20px;
+        padding: 22px;
       }
       .feature h3 { margin: 0 0 8px; font-size: 1.05rem; }
       .feature p { margin: 0; color: var(--muted); font-size: 0.95rem; }
-      .feature .ico { font-size: 1.5rem; margin-bottom: 8px; display: block; }
-      .download { text-align: center; }
-      .cta {
-        display: inline-block;
-        padding: 12px 28px;
-        background: var(--accent);
-        color: white;
-        border-radius: 8px;
-        font-weight: 600;
-        margin-top: 12px;
+      .feature .ico { font-size: 1.6rem; margin-bottom: 10px; display: block; }
+
+      .privacy-block {
+        background: linear-gradient(135deg, var(--bg-elev) 0%, var(--bg-elev-2) 100%);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 32px;
       }
-      .cta:hover { text-decoration: none; opacity: 0.9; }
-      .privacy ul { padding-left: 20px; color: var(--muted); }
-      .privacy li { margin-bottom: 6px; }
+      .privacy-block ul { padding-left: 22px; color: var(--muted); margin: 0; }
+      .privacy-block li { margin-bottom: 8px; }
+      .privacy-block strong { color: var(--fg); }
+
+      .download {
+        text-align: center;
+        background:
+          radial-gradient(circle at 50% 50%, var(--accent-soft) 0%, transparent 70%),
+          var(--bg);
+      }
+      .download p { font-size: 1.1rem; margin-bottom: 28px; }
+
       footer {
-        padding: 32px 0 48px;
+        padding: 36px 0 56px;
         text-align: center;
         color: var(--muted);
         font-size: 0.9rem;
       }
-      footer a { color: var(--muted); margin: 0 8px; }
-      .lang-switch { position: absolute; top: 16px; right: 24px; }
-      .lang-switch a { font-size: 0.85rem; margin-left: 12px; }
+      footer a { color: var(--muted); margin: 0 10px; }
+      footer .sep { color: var(--border); margin: 0 4px; }
+
+      /* Bilingual switch (default EN, body.ja → JA) */
       [lang="ja"] { display: none; }
       body.ja [lang="en"] { display: none; }
       body.ja [lang="ja"] { display: block; }
       body.ja [lang="ja"].inline { display: inline; }
-      @media (max-width: 640px) {
-        h1 { font-size: 1.8rem; }
-        section { padding: 40px 0; }
+
+      @media (max-width: 720px) {
+        h1 { font-size: 2rem; }
+        section { padding: 48px 0; }
+        .showcase { grid-template-columns: 1fr; gap: 24px; margin-bottom: 40px; }
+        .showcase.reverse > .shot { order: 0; }
       }
     </style>
   </head>
@@ -130,10 +212,12 @@
         <p class="tagline" lang="en">Paint the world you've actually explored.</p>
         <p class="tagline" lang="ja">あなたが歩いた地球を、塗りつぶす。</p>
         <div class="badges">
-          <span class="badge live">v0.1.6 — Closed Testing</span>
           <span class="badge">Android</span>
           <span class="badge">100% on-device</span>
+          <span class="badge">Free</span>
         </div>
+        <a class="hero-cta" href="https://play.google.com/store/apps/details?id=com.lizdev.routepia" lang="en">Get it on Google Play</a>
+        <a class="hero-cta" href="https://play.google.com/store/apps/details?id=com.lizdev.routepia" lang="ja">Google Play で入手</a>
       </div>
     </header>
 
@@ -141,80 +225,102 @@
       <div class="wrap">
         <h2 lang="en">What is Routepia?</h2>
         <h2 lang="ja">Routepia とは</h2>
-        <p lang="en">
-          Routepia is a privacy-first travel-history mapper for Android. Every cell of
-          the world that you've walked, driven, or flown through is colored in — like
-          painting a real-life map of your life. It runs entirely on your device:
-          <strong>no account, no servers, no telemetry, no ads scraping your location</strong>.
+        <p class="lead" lang="en">
+          A travel-history map that fills in every cell you've walked, driven, or
+          flown through. Your personal world map of the places you've actually been —
+          fully private, fully on-device.
         </p>
-        <p lang="ja">
-          Routepia は、あなたが歩いた・走った・飛んだ場所を地図上のセル単位で塗りつぶしていく Android 専用の旅行履歴アプリです。すべての処理は端末内で完結します。
-          <strong>アカウント不要・サーバー送信なし・位置情報の外部共有なし</strong>。
+        <p class="lead" lang="ja">
+          歩いた・走った・飛んだ場所をセル単位で塗りつぶしていく、あなただけの世界地図。すべての処理は端末内で完結します。
         </p>
+
+        <div class="showcase">
+          <div class="shot">
+            <img src="src/home_default_tokyo.jpg" alt="Default map view" />
+          </div>
+          <div>
+            <h3 lang="en">Your trail, on a real map</h3>
+            <h3 lang="ja">本物の地図にあなたの軌跡を</h3>
+            <p lang="en">
+              Every cell you visit is painted in. Watch your personal map fill up
+              over weeks, months, years.
+            </p>
+            <p lang="ja">
+              訪れたセルが地図上に色付けされていきます。日々・月・年単位であなたの活動範囲が育っていく様子を一望できます。
+            </p>
+          </div>
+        </div>
+
+        <div class="showcase reverse">
+          <div class="shot">
+            <img src="src/home_sattelite_tokyo.jpg" alt="Satellite map view" />
+          </div>
+          <div>
+            <h3 lang="en">Three map modes</h3>
+            <h3 lang="ja">3つの地図モード</h3>
+            <p lang="en">
+              Switch instantly between Standard, Satellite, and a Blank canvas mode
+              that shows only your trail — perfect for sharing without revealing
+              place names.
+            </p>
+            <p lang="ja">
+              通常 / 衛星 / 白紙（軌跡だけ）の3モードを瞬時に切替。地名を出さずにシェアしたい時にも便利です。
+            </p>
+          </div>
+        </div>
+
+        <div class="showcase">
+          <div class="shot">
+            <img src="src/home_menu.jpg" alt="Menu screen" />
+          </div>
+          <div>
+            <h3 lang="en">Progress by region</h3>
+            <h3 lang="ja">地域別の進捗ランキング</h3>
+            <p lang="en">
+              See exactly what percent of each country, US state, world city, or
+              landmark you've covered — sorted by area. Country flags shown for
+              instant recognition.
+            </p>
+            <p lang="ja">
+              世界各国・米州・主要都市・ランドマーク・都道府県（日本語環境）の達成率を面積順で表示。国の進捗には国旗アイコンを表示します。
+            </p>
+          </div>
+        </div>
+
+        <div class="showcase reverse">
+          <div class="shot">
+            <img src="src/menu_data.jpg" alt="Data management screen" />
+          </div>
+          <div>
+            <h3 lang="en">Your data, your control</h3>
+            <h3 lang="ja">データはあなたのもの</h3>
+            <p lang="en">
+              Export, import, and manage your history at any time. Backups stay on
+              your device — share them only when you choose to.
+            </p>
+            <p lang="ja">
+              いつでもエクスポート・インポート・管理が可能。バックアップは端末内に保存され、自分の意志でだけ持ち出せます。
+            </p>
+          </div>
+        </div>
       </div>
     </section>
 
     <section>
       <div class="wrap">
-        <h2 lang="en">Features</h2>
-        <h2 lang="ja">主な機能</h2>
+        <h2 lang="en">More to love</h2>
+        <h2 lang="ja">その他の特長</h2>
         <div class="features">
           <div class="feature">
-            <span class="ico">🗺️</span>
-            <h3 lang="en">Paint your world</h3>
-            <h3 lang="ja">世界を塗りつぶす</h3>
-            <p lang="en">
-              Every visited cell is permanently colored. Three map modes: Standard,
-              Satellite, and Blank canvas (your trail only).
-            </p>
-            <p lang="ja">
-              訪れたセルが地図上に永続的に色付けされます。通常／衛星／白紙（軌跡だけ表示）の3モード切替。
-            </p>
-          </div>
-          <div class="feature">
-            <span class="ico">📊</span>
-            <h3 lang="en">Progress by region</h3>
-            <h3 lang="ja">地域別の進捗ランキング</h3>
-            <p lang="en">
-              See what % of each country, US state, world city, micro-state, or
-              landmark you've covered. Sorted by area (km²).
-            </p>
-            <p lang="ja">
-              世界各国・米州・主要都市・ランドマーク・都道府県（日本語環境）の達成率を面積順に表示。
-            </p>
-          </div>
-          <div class="feature">
-            <span class="ico">🏳️</span>
-            <h3 lang="en">Country flags</h3>
-            <h3 lang="ja">国旗アイコン</h3>
-            <p lang="en">
-              Country rows display the actual flag for instant visual recognition.
-            </p>
-            <p lang="ja">
-              国の進捗にはその国の国旗アイコンを表示。一目で識別できます。
-            </p>
-          </div>
-          <div class="feature">
             <span class="ico">🔋</span>
-            <h3 lang="en">Reliable foreground recording</h3>
-            <h3 lang="ja">常駐記録の安定性</h3>
+            <h3 lang="en">Reliable recording</h3>
+            <h3 lang="ja">安定した記録</h3>
             <p lang="en">
-              Persistent foreground service so Android won't kill the recording on long
-              trips.
+              Foreground service keeps logging steady on long trips, even when the
+              screen is off.
             </p>
             <p lang="ja">
-              フォアグラウンド通知で長距離移動中も Android に殺されない位置記録。
-            </p>
-          </div>
-          <div class="feature">
-            <span class="ico">📤</span>
-            <h3 lang="en">Export & import</h3>
-            <h3 lang="ja">エクスポート / インポート</h3>
-            <p lang="en">
-              Back up and restore your history with ease using the export / import feature.
-            </p>
-            <p lang="ja">
-              エクスポート / インポート機能で履歴をかんたんにバックアップ・復元できます。
+              フォアグラウンド通知で長距離移動・画面オフ時も安定して記録を継続。
             </p>
           </div>
           <div class="feature">
@@ -222,52 +328,72 @@
             <h3 lang="en">Bilingual UI</h3>
             <h3 lang="ja">日英バイリンガル</h3>
             <p lang="en">
-              Auto-follows your system language. Japanese or English — no toggle
-              needed.
+              Auto-follows your system language. English and Japanese supported out
+              of the box.
             </p>
             <p lang="ja">
-              システム言語に自動追従。日本語・英語に対応。
+              システム言語に自動追従。英語・日本語に対応。
+            </p>
+          </div>
+          <div class="feature">
+            <span class="ico">⚡</span>
+            <h3 lang="en">Fast & lightweight</h3>
+            <h3 lang="ja">軽量・高速</h3>
+            <p lang="en">
+              Tile-based rendering keeps the map smooth even with years of history
+              loaded.
+            </p>
+            <p lang="ja">
+              タイルベース描画で何年分の履歴を読み込んでも地図はスムーズ。
+            </p>
+          </div>
+          <div class="feature">
+            <span class="ico">🎯</span>
+            <h3 lang="en">Adjustable cell size</h3>
+            <h3 lang="ja">セルサイズ調整</h3>
+            <p lang="en">
+              Choose how detailed your map gets — from neighborhood-level to
+              country-level granularity.
+            </p>
+            <p lang="ja">
+              街区レベルから国レベルまで、塗りつぶしの粒度を自由に変更可能。
             </p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="privacy">
+    <section>
       <div class="wrap">
-        <h2 lang="en">Privacy</h2>
-        <h2 lang="ja">プライバシー</h2>
-        <ul lang="en">
-          <li>Location data <strong>never leaves your device</strong>.</li>
-          <li>No account, no sign-up, no email required.</li>
-          <li>No analytics SDK tracks your movements.</li>
-          <li>The only network calls are: map tiles (Google Maps), banner ads (AdMob, no location passed), and update checks.</li>
-          <li>You can export and delete your data at any time.</li>
-        </ul>
-        <ul lang="ja">
-          <li>位置情報は<strong>端末外に送信されません</strong>。</li>
-          <li>アカウント登録・メールアドレス入力は一切不要。</li>
-          <li>移動履歴をトラッキングする解析 SDK は搭載していません。</li>
-          <li>ネットワーク通信は地図タイル取得（Google Maps）、バナー広告表示（AdMob・位置情報は渡しません）、アップデート確認のみ。</li>
-          <li>データは任意のタイミングでエクスポート・削除できます。</li>
-        </ul>
+        <h2 lang="en">Privacy first</h2>
+        <h2 lang="ja">プライバシー第一</h2>
+        <div class="privacy-block">
+          <ul lang="en">
+            <li>Location data <strong>never leaves your device</strong>.</li>
+            <li>No account, no sign-up, no email required.</li>
+            <li>No analytics SDK tracks your movements.</li>
+            <li>The only network calls are: map tiles, banner ads (no location passed), and update checks.</li>
+            <li>Export and delete your data at any time.</li>
+          </ul>
+          <ul lang="ja">
+            <li>位置情報は<strong>端末外に送信されません</strong>。</li>
+            <li>アカウント登録・メールアドレス入力は一切不要。</li>
+            <li>移動履歴をトラッキングする解析 SDK は搭載していません。</li>
+            <li>ネットワーク通信は地図タイル取得・バナー広告表示（位置情報は渡しません）・アップデート確認のみ。</li>
+            <li>データはいつでもエクスポート・削除できます。</li>
+          </ul>
+        </div>
       </div>
     </section>
 
     <section class="download">
       <div class="wrap">
         <h2 lang="en">Get the app</h2>
-        <h2 lang="ja">ダウンロード</h2>
-        <p lang="en">
-          Routepia is currently in
-          <strong>Closed Testing</strong> on Google Play. To join the test,
-          please contact me directly.
-        </p>
-        <p lang="ja">
-          Routepia は現在 Google Play の<strong>クローズドテスト</strong>を実施中です。テスト参加をご希望の方はご連絡ください。
-        </p>
-        <a class="cta" href="mailto:contact@example.com" lang="en">Request access</a>
-        <a class="cta" href="mailto:contact@example.com" lang="ja">参加リクエスト</a>
+        <h2 lang="ja">アプリのダウンロード</h2>
+        <p lang="en">Available on Google Play.</p>
+        <p lang="ja">Google Play からダウンロードできます。</p>
+        <a class="hero-cta" href="https://play.google.com/store/apps/details?id=com.lizdev.routepia" lang="en">Get it on Google Play</a>
+        <a class="hero-cta" href="https://play.google.com/store/apps/details?id=com.lizdev.routepia" lang="ja">Google Play で入手</a>
       </div>
     </section>
 
@@ -276,15 +402,19 @@
         <p lang="en">
           Made with care by an indie developer in Tokyo.
           <br />
+          <a href="privacy_policy/">Privacy Policy</a>
+          <span class="sep">·</span>
           <a href="app-ads.txt">app-ads.txt</a>
-          <span>·</span>
+          <span class="sep">·</span>
           <a href="#" onclick="document.body.classList.add('ja');return false;">日本語</a>
         </p>
         <p lang="ja">
           東京のインディー開発者が、こだわって作っています。
           <br />
+          <a href="privacy_policy/">プライバシーポリシー</a>
+          <span class="sep">·</span>
           <a href="app-ads.txt">app-ads.txt</a>
-          <span>·</span>
+          <span class="sep">·</span>
           <a href="#" onclick="document.body.classList.remove('ja');return false;">English</a>
         </p>
       </div>
